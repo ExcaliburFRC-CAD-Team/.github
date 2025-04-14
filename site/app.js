@@ -16,6 +16,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.getElementById('gearBtn').addEventListener('click', () => {
+    const gearBtn = document.getElementById('gearBtn');
+    const calc = document.getElementById('beltCalculator');
+
+    gearBtn.classList.add('spin');
+    setTimeout(() => gearBtn.classList.remove('spin'), 500); // remove after animation
+
+    calc.classList.toggle('hidden');
+});
+
+
+document.getElementById('closeCalc').addEventListener('click', () => {
+    document.getElementById('beltCalculator').classList.add('hidden');
+});
+
+function calculateBelt() {
+    const teeth1 = parseInt(document.getElementById('teeth1').value);
+    const teeth2 = parseInt(document.getElementById('teeth2').value);
+    const distance = parseFloat(document.getElementById('distance').value);
+
+    if (!teeth1 || !teeth2 || !distance) {
+        document.getElementById('beltResult').innerText = "Please fill all fields.";
+        return;
+    }
+
+    const pitch = 0.2; // 5mm HTD pitch in inches
+    const beltLengthIn = (2 * distance) + ((teeth1 + teeth2) / 2 * pitch) + ((Math.pow(teeth2 - teeth1, 2)) / (4 * Math.PI * distance)) * pitch;
+
+    const roundedTeeth = Math.round(beltLengthIn / pitch);
+    const actualLengthIn = roundedTeeth * pitch;
+    const actualLengthMm = actualLengthIn * 25.4;
+
+    document.getElementById('beltResult').innerText = 
+        `Estimated Belt: ${roundedTeeth} teeth\n` +
+        `Length: ${actualLengthIn.toFixed(2)} in / ${actualLengthMm.toFixed(1)} mm`;
+}
+
 document.getElementById('formatForm').addEventListener('submit', function(event) {
     event.preventDefault();
 

@@ -7,6 +7,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- A replacement to  https://wcproducts.com/pages/calculator-belt-->
+    <!-- Gear Button -->
+<button id="gearBtn" class="calculator-toggle">⚙️</button>
+    <!-- Calculator -->
+  <div id="beltCalculator" class="hidden">
+    <div class="popup-header">
+      <h3>Gear Belt Calculator</h3>
+      <button id="closeCalc">&times;</button>
+    </div>
+  
+    <label for="teeth1">Pulley 1 Teeth:</label>
+    <input type="number" id="teeth1" min="1" value="18">
+  
+    <label for="teeth2">Pulley 2 Teeth:</label>
+    <input type="number" id="teeth2" min="1" value="18">
+  
+    <label for="distance">Center-to-Center (in):</label>
+    <input type="number" id="distance" step="0.01" min="0.1" value="7">
+  
+    <button id="calcBtn" onclick="calculateBelt()">Calculate</button>
+    <p id="beltResult"></p>
+  </div>  
+  
     <!-- A good replace for https://excaliburfrc.github.io/resources -->
     <button id="colorInfoBtn" title="Color Scheme Info">🎨</button>
     <div id="colorInfo" class="hidden">
