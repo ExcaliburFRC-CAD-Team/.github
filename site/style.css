@@ -14,7 +14,7 @@ body {
     animation: fadeIn 1.5s ease-in-out;
 }
 
-/* Title Styling */
+/* Common Title Styling */
 h1, h2 {
     font-size: 2.5rem;
     color: #003366;
@@ -24,6 +24,9 @@ h1, h2 {
     font-weight: bold;
     letter-spacing: 2px;
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
     animation: slideInFromTop 1s ease-in-out;
 }
 
@@ -40,13 +43,11 @@ h1, h2 {
     animation: scaleUp 0.8s ease-in-out;
 }
 
-/* Hover effect for container */
 .container:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Form Styling */
 form {
     display: flex;
     flex-direction: column;
@@ -55,7 +56,6 @@ form {
     margin-bottom: 30px;
 }
 
-/* Label Styling */
 label {
     font-size: 1.2rem;
     color: #444;
@@ -68,7 +68,6 @@ label:hover {
     color: #007bff;
 }
 
-/* Select & Input Styling */
 select, input {
     padding: 14px;
     font-size: 1rem;
@@ -82,20 +81,13 @@ select, input {
     animation: fadeIn 0.8s ease;
 }
 
-/* Select Animation on Interaction */
-select:hover, select:focus {
+select:hover, select:focus,
+input:focus {
     transform: scale(1.05);
     border-color: #007bff;
     box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
 }
 
-/* Input and Select Focus Effect */
-select:focus, input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-}
-
-/* Button Styling */
 button[type="submit"] {
     padding: 12px 20px;
     font-size: 1.1rem;
@@ -112,24 +104,20 @@ button[type="submit"] {
     box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
-/* Button Hover Effect */
 button[type="submit"]:hover {
     background: linear-gradient(135deg, #0056b3, #003c82);
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
-/* Button Active Effect */
 button[type="submit"]:active {
     transform: scale(0.98);
 }
 
-/* Hidden Class for Visibility Control */
 .hidden {
     display: none;
 }
 
-/* Result Section Styling */
 #result {
     font-size: 1.4rem;
     color: #333;
@@ -153,21 +141,21 @@ button[type="submit"]:active {
 
 /* Animations */
 @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 @keyframes slideInFromTop {
-    0% { transform: translateY(-50px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes scaleUp {
-    0% { transform: scale(0.9); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
+    from { transform: scale(0.9); opacity: 0.8; }
+    to { transform: scale(1); opacity: 1; }
 }
 
-/* Color Info Button Styling */
+/* Color Scheme Info Button and Styles */
 #colorInfoBtn {
     position: fixed;
     bottom: 1rem;
@@ -193,7 +181,6 @@ button[type="submit"]:active {
     background: #003366;
 }
 
-/* Color Info Box Styling */
 #colorInfo {
     position: fixed;
     bottom: 5rem;
@@ -242,18 +229,20 @@ button[type="submit"]:active {
 }
 
 .rgb-value {
-    font-family: 'Roboto Mono', monospace; /* Modern monospace font */
+    font-family: 'Roboto Mono', monospace;
     font-size: 0.9rem;
     color: #2d3748;
     font-weight: 500;
-    letter-spacing: 0.5px; /* Better readability */
-    /* Keep existing other properties */
+    letter-spacing: 0.5px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
+/* Gear Button and Gear Icon Styles */
+/* The gear button now mimics the behavior of the color icon button. */
 #gearBtn {
     position: fixed;
     bottom: 1rem;
-    right: 1rem; /* Changed from left to right */
+    right: 1rem;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -261,29 +250,38 @@ button[type="submit"]:active {
     color: white;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    transition: background 0.3s;
+    z-index: 10;
 }
 
 #gearBtn:hover {
-    background-color: #0056b3;
-    transform: rotate(90deg);
+    background: #003366;
 }
 
-.material-icons {
-    font-size: 28px;
+/* Gear icon (inside the gear button):
+   - It is scaled, moved up slightly, and spins 360° on hover
+   - The transform-origin is set to its center ("hole") */
+.gear-icon {
+    display: inline-block;
+    font-size: 1.8rem;  /* Adjust to taste to match the color icon style */
+    transform: translateY(-5px) scale(0.9);
+    transform-origin: 50% 50%;
+    transition: transform 0.5s ease-in-out;
 }
 
-/* Calculator Popup */
+/* On gear button hover, spin the gear icon */
+#gearBtn:hover .gear-icon {
+    transform: translateY(-5px) scale(0.9) rotate(360deg);
+}
+
+/* Belt Calculator Styles */
 #beltCalculator {
     position: fixed;
-    bottom: 4.5rem; /* above gear button */
-    right: 1rem; /* aligned with gear button */
+    bottom: 4.5rem;
+    right: 1rem;
     background: white;
     padding: 1rem;
     border-radius: 0.75rem;
@@ -293,12 +291,14 @@ button[type="submit"]:active {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 #beltCalculator.hidden {
     display: none;
 }
-
 
 .popup-header {
     display: flex;
@@ -326,7 +326,6 @@ button[type="submit"]:active {
     color: #000;
 }
 
-/* Input Styles */
 #beltCalculator input[type="number"] {
     width: 100%;
     padding: 10px;
@@ -338,7 +337,6 @@ button[type="submit"]:active {
     box-sizing: border-box;
 }
 
-/* Calculate Button */
 #calcBtn {
     width: 100%;
     background-color: #003366;
@@ -356,18 +354,9 @@ button[type="submit"]:active {
     background-color: #0056b3;
 }
 
-/* Result */
 #beltResult {
     font-size: 14px;
     color: #333;
     text-align: center;
     margin-top: 8px;
-}
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-#gearBtn.spin {
-    animation: spin 0.5s ease-in-out;
 }

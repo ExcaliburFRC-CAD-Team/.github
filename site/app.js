@@ -1,35 +1,48 @@
-// Updated JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    const colorInfoBtn = document.getElementById('colorInfoBtn');
-    const infoBox = document.getElementById('colorInfo');
+// ==============================
+// UI TOGGLES
+// ==============================
 
-    colorInfoBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        infoBox.classList.toggle('active');
-    });
+// Variables that are used to toggle the visibility of the calculator and color info section
+const gearBtn = document.getElementById('gearBtn');
+const beltCalculator = document.getElementById('beltCalculator');
+const closeCalc = document.getElementById('closeCalc');
 
-    // Close popup when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!infoBox.contains(e.target) && e.target !== colorInfoBtn) {
-            infoBox.classList.remove('active');
-        }
-    });
-});
-
-document.getElementById('gearBtn').addEventListener('click', () => {
-    const gearBtn = document.getElementById('gearBtn');
-    const calc = document.getElementById('beltCalculator');
-
-    gearBtn.classList.add('spin');
-    setTimeout(() => gearBtn.classList.remove('spin'), 500); // remove after animation
-
-    calc.classList.toggle('hidden');
-});
-
-
+// Toggle Belt Calculator with animation
+function toggleCalculator() {
+    // If the calculator is hidden, remove the 'hidden' class and trigger animation
+    if (beltCalculator.classList.contains('hidden')) {
+      beltCalculator.classList.remove('hidden');
+      // Use a timeout so the browser registers the removal and transition applies
+      requestAnimationFrame(() => {
+        beltCalculator.classList.add('active');
+      });
+    } else {
+      // Reverse the animation and hide element after transition
+      beltCalculator.classList.remove('active');
+      // Wait until the transition ends before fully hiding
+      beltCalculator.addEventListener('transitionend', function handler() {
+        beltCalculator.classList.add('hidden');
+        beltCalculator.removeEventListener('transitionend', handler);
+      });
+    }
+  }
+  
+  gearBtn.addEventListener('click', toggleCalculator);
+  closeCalc.addEventListener('click', toggleCalculator);
+    
+// Close Belt Calculator
 document.getElementById('closeCalc').addEventListener('click', () => {
     document.getElementById('beltCalculator').classList.add('hidden');
+  });
+  
+// Toggle Color Info Section
+document.getElementById('colorInfoBtn').addEventListener('click', () => {
+    document.getElementById('colorInfo').classList.toggle('active');
 });
+
+// ==============================
+// BELT CALCULATOR
+// ==============================
 
 function calculateBelt() {
     const teeth1 = parseInt(document.getElementById('teeth1').value);
@@ -48,12 +61,16 @@ function calculateBelt() {
     const actualLengthIn = roundedTeeth * pitch;
     const actualLengthMm = actualLengthIn * 25.4;
 
-    document.getElementById('beltResult').innerText = 
+    document.getElementById('beltResult').innerText =
         `Estimated Belt: ${roundedTeeth} teeth\n` +
         `Length: ${actualLengthIn.toFixed(2)} in / ${actualLengthMm.toFixed(1)} mm`;
 }
 
-document.getElementById('formatForm').addEventListener('submit', function(event) {
+// ==============================
+// FORMAT FORM
+// ==============================
+
+document.getElementById('formatForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
     const modelType = document.getElementById('modelType').value;
@@ -67,7 +84,6 @@ document.getElementById('formatForm').addEventListener('submit', function(event)
     const systemType = document.getElementById('type').value;
 
     if (modelType === 'Part') {
-
         if (partsName === 'MOTOR' && !motor) {
             alert("You didn't choose Motor.");
             return;
@@ -90,18 +106,22 @@ document.getElementById('formatForm').addEventListener('submit', function(event)
 
     const resultElement = document.getElementById('result');
     resultElement.innerText = formatId;
+    // Show the rectangle with the generated format ID on pressing the button
+    document.getElementById('generatedFormatContainer').style.display = 'block';
 
-    navigator.clipboard.writeText(formatId)
-        .catch(err => {
-            console.error("Failed to copy format ID: ", err);
-            alert("Failed to copy format ID. Please try manually copying it.");
-        });
+    navigator.clipboard.writeText(formatId).catch(err => {
+        console.error("Failed to copy format ID: ", err);
+        alert("Failed to copy format ID. Please try manually copying it.");
+    });
 });
+
+// ==============================
+// FORMAT ID GENERATOR
+// ==============================
 
 function generateFormatId(systemType, modelType, modelOrder, modelVersion, partsName, motor, plate, width, manufactureMethod) {
     const space = "-";
     const cadId = generateCadId(systemType, modelType, modelOrder, modelVersion, partsName);
-
     let formatParts = [];
     let manufacture = '';
 
@@ -146,6 +166,10 @@ function formatModelOrder(modelOrder) {
     return modelOrder.padStart(2, '0');
 }
 
+// ==============================
+// FORM FIELD VISIBILITY CONTROL
+// ==============================
+
 document.getElementById('modelType').addEventListener('change', updateFieldVisibility);
 document.getElementById('partsName').addEventListener('change', updateFieldVisibility);
 document.getElementById('plate').addEventListener('change', updateFieldVisibility);
@@ -157,16 +181,21 @@ function updateFieldVisibility() {
     const partsName = document.getElementById('partsName').value;
     const plate = document.getElementById('plate').value;
 
-    const modelOrderField = document.getElementById('modelOrder').parentElement;
-    modelOrderField.style.display = modelType === 'Main_Assembly' ? 'none' : 'block';
+    document.getElementById('modelOrder').parentElement.style.display =
+        modelType === 'Main_Assembly' ? 'none' : 'block';
 
-    document.getElementById('partsName').parentElement.style.display = modelType === 'Main_Assembly' || modelType === 'Sub_Assembly' ? 'none' : 'block';
+    document.getElementById('partsName').parentElement.style.display =
+        modelType === 'Main_Assembly' || modelType === 'Sub_Assembly' ? 'none' : 'block';
 
-    document.getElementById('plate').parentElement.style.display = partsName === 'PLATE' ? 'block' : 'none';
+    document.getElementById('plate').parentElement.style.display =
+        partsName === 'PLATE' ? 'block' : 'none';
 
-    document.getElementById('motor').parentElement.style.display = partsName === 'MOTOR' && modelType === 'Part' ? 'block' : 'none';
+    document.getElementById('motor').parentElement.style.display =
+        partsName === 'MOTOR' && modelType === 'Part' ? 'block' : 'none';
 
-    document.getElementById('width').parentElement.style.display = modelType === 'Part' && partsName === 'PLATE' && plate === 'Aluminium' ? 'block' : 'none';
+    document.getElementById('width').parentElement.style.display =
+        modelType === 'Part' && partsName === 'PLATE' && plate === 'Aluminium' ? 'block' : 'none';
 
-    document.getElementById('manufactureMethod').parentElement.style.display = modelType === 'Main_Assembly' || modelType === 'Sub_Assembly' || !partsName ? 'none' : 'block';
+    document.getElementById('manufactureMethod').parentElement.style.display =
+        modelType === 'Main_Assembly' || modelType === 'Sub_Assembly' || !partsName ? 'none' : 'block';
 }
